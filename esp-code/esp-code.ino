@@ -45,7 +45,6 @@ rgb_lcd lcd;
 int fan_lcd_channel = 0;
 int volume_lcd_channel = 1;
 
-
 #define TCA_ADDR 0x70 
 
 void tcaSelect(uint8_t channel) {
