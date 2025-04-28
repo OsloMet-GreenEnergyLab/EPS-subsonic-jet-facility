@@ -59,18 +59,18 @@ Fan and switch handling tasks are pinned to separate ESP32 cores for parallel pr
 
 ## ESP32 Pinout
 
-| Function                     | ESP32 Pin                          | Description                           |
-|:-----------------------------|:-----------------------------------|:--------------------------------------|
-| Power Switch Input           | 5                                  | Toggles fan system ON/OFF             |
-| Speaker Switch Input         | 4                                  | (Optional, currently commented)       |
-| Fan Speed Potentiometer      | 34                                 | Analog read for fan speed setting     |
-| Speaker Volume Potentiometer | 35                                 | Analog read for speaker volume        |
-| Power LED Output             | 13                                 | Indicates fan system status           |
-| Speaker LED Output           | 12                                 | (Optional, currently commented)       |
-| Fan PWM Control              | 25                                 | PWM signal to control fan speed       |
-| Fan Tachometer Input         | 14                                 | Reads pulses for RPM calculation      |
-| I2C SDA                      | Default (assigned in Wire.begin()) | I2C data line for LCDs & multiplexer  |
-| I2C SCL                      | Default (assigned in Wire.begin()) | I2C clock line for LCDs & multiplexer |
+| Function                     | ESP32 Pin | Description                           |
+|:-----------------------------|:----------|:--------------------------------------|
+| Power Switch Input           | 5         | Toggles fan system ON/OFF             |
+| Speaker Switch Input         | 4         | (Optional, currently commented)       |
+| Fan Speed Potentiometer      | 34        | Analog read for fan speed setting     |
+| Speaker Volume Potentiometer | 35        | Analog read for speaker volume        |
+| Power LED Output             | 13        | Indicates fan system status           |
+| Speaker LED Output           | 12        | (Optional, currently commented)       |
+| Fan PWM Control              | 25        | PWM signal to control fan speed       |
+| Fan Tachometer Input         | 14        | Reads pulses for RPM calculation      |
+| I2C SDA                      | 21        | I2C data line for LCDs & multiplexer  |
+| I2C SCL                      | 22        | I2C clock line for LCDs & multiplexer |
 ## Notes
 
 Kickstart: Fan starts at 100% PWM for 5 seconds on boot.
