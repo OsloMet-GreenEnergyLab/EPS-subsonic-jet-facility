@@ -4,15 +4,12 @@
 
 //SWITCHES PINS
 #define POWER_SWITCH_PIN 18 //prev 5
-#define SPEAKER_POWER_SWITCH_PIN 4
 
 //POT PINS
 #define FAN_POT_PIN 34
-#define VOLUME_POT_PIN 35
 
 //LED PINS
 #define POWER_LED_PIN 13
-#define SPEAKER_POWER_LED_PIN 12
 
 //FAN PINS
 #define FAN_PWM_PIN 25    // PWM control pin
@@ -33,17 +30,14 @@ unsigned long lastTime = 0;
 unsigned long rpm = 0;
 
 bool POWER_ON = false;
-bool SPEAKER_ON = false;
 
 int FAN_SPEED = 178;     // 0-255, 70% default
 int FAN_SPEED_PERCENTAGE = 0;
-float SPEAKER_VOLUME = 0;
 
 
 rgb_lcd lcd;
 
 int fan_lcd_channel = 0;
-int volume_lcd_channel = 1;
 
 #define TCA_ADDR 0x70 
 
@@ -144,11 +138,6 @@ void handlePowerOff() {
     FAN_SPEED = 0;
     resetLcd(fan_lcd_channel);
     setFanSpeed(); 
-
-    if(!SPEAKER_ON) {
-      SPEAKER_VOLUME = 0;
-      resetLcd(volume_lcd_channel);
-    }
 }
 
 void controlFan() {
@@ -160,14 +149,8 @@ void controlFan() {
     calculateFanRpm();
 }
 
-void controlSpeaker() {
-    SPEAKER_VOLUME = getPotentiometerValueInPercent(VOLUME_POT_PIN);
-    displayLcdGeneric(volume_lcd_channel, "Speaker volume:", SPEAKER_VOLUME, "Speaker is off");
-}
-
 void controlPanelController(void *pvParameters) {
     configureLcd(fan_lcd_channel);
-    configureLcd(volume_lcd_channel);
 
     while (1) {
       if(!POWER_ON) {
@@ -178,10 +161,6 @@ void controlPanelController(void *pvParameters) {
 
       controlFan();
 
-      if(!SPEAKER_ON) {
-        controlSpeaker();      
-      }
-
     delay(100);
   }
 }
@@ -189,14 +168,12 @@ void controlPanelController(void *pvParameters) {
 void setup() {
     Serial.begin(115200);
     Wire.begin();
-    scanI2CWithTCA();
+    //scanI2CWithTCA();
 
     pinMode(POWER_SWITCH_PIN, INPUT_PULLUP);  // Use internal pull-up resistor
-    pinMode(SPEAKER_POWER_SWITCH_PIN, INPUT_PULLUP);  // Use internal pull-up resistor
 
     pinMode(POWER_LED_PIN, OUTPUT);
-    pinMode(SPEAKER_POWER_LED_PIN, OUTPUT);
-
+ 
     ledcAttach(FAN_PWM_PIN, PWM_FREQ, PWM_RESOLUTION); // Set up PWM 
     pinMode(FAN_TACHO_PIN, INPUT_PULLUP); // Set up tacho meters pins
     attachInterrupt(digitalPinToInterrupt(FAN_TACHO_PIN), countPulse, FALLING);
@@ -208,12 +185,6 @@ void setup() {
     lastTime = millis();
 }
 
-void powerDownReset() {
-  if(!POWER_ON) {
-    float SPEAKER_VOLUME = 0;
-    digitalWrite(SPEAKER_POWER_LED_PIN, LOW); 
-  }
-}
 
 void scanI2CWithTCA() {
   for (uint8_t ch = 0; ch < 8; ch++) {
@@ -252,12 +223,8 @@ void toggleSwitchGeneric(int switchPin, bool &deviceState, int ledPin, const cha
 
 // Runs on core 1;
 void switchesController(void *pvParameters) {
-
   while(1) {
-    toggleSwitchGeneric(POWER_SWITCH_PIN, POWER_ON, POWER_LED_PIN, "Fan", powerDownReset);
-    if(POWER_ON) {
-      //toggleSwitchGeneric(SPEAKER_POWER_SWITCH_PIN, SPEAKER_ON, SPEAKER_POWER_LED_PIN, "Speaker", nullptr,  true);
-    }
+    toggleSwitchGeneric(POWER_SWITCH_PIN, POWER_ON, POWER_LED_PIN, "Fan");
     
     delay(100);
   }
