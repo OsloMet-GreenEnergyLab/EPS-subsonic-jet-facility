@@ -35,7 +35,7 @@ Fan and switch handling tasks are pinned to separate ESP32 cores for parallel pr
 
 * Arduino IDE
 
-* ESP32 Board Support for Arduino
+* NODEMCU-32S Board Support
 
 ## Arduino Libraries:
 
@@ -53,7 +53,7 @@ Fan and switch handling tasks are pinned to separate ESP32 cores for parallel pr
 
 3. Install necessary libraries via the Library Manager.
 
-4. Select the NODEMCU ESP32 board and correct COM port.
+4. Select the NODEMCU-32S board and correct COM port.
 
 5. Upload code.
 
