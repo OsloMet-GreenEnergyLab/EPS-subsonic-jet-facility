@@ -53,7 +53,7 @@ Fan and switch handling tasks are pinned to separate ESP32 cores for parallel pr
 
 3. Install necessary libraries via the Library Manager.
 
-4. Select your ESP32 board and correct COM port.
+4. Select the NODEMCU ESP32 board and correct COM port.
 
 5. Upload code.
 
