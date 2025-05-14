@@ -3,7 +3,7 @@
 #include <Arduino.h>;
 
 //SWITCHES PINS
-#define POWER_SWITCH_PIN 5 //prev 5
+#define POWER_SWITCH_PIN 5
 
 //POT PINS
 #define FAN_POT_PIN 34
@@ -16,7 +16,7 @@
 #define FAN_TACHO_PIN 14  // RPM feedback pin
 
 // PWM properties
-#define PWM_FREQ 25000    // 25kHz PWM frequency
+#define PWM_FREQ 12500    // 12.5kHz PWM frequency
 #define PWM_CHANNEL 0
 #define PWM_RESOLUTION 8  // 8-bit resolution (0-255)
 
@@ -109,11 +109,19 @@ void resetLcd(int channel) {
 }
 
 int getPotentiometerValueInPercent(int pin) {
-    return map(analogRead(pin), 0, 4095, 0, 100);
+    uint16_t value = analogRead(pin);
+    if(value <= 409) {
+      return 0;
+    }
+    return map(value, 409, 4095, 0, 100);
 }
 
 int getPotentiometerValueIn8Bit(int pin) {
-    return map(analogRead(pin), 0, 4095, 0, 255);
+     uint16_t value = analogRead(pin);
+    if(value <= 409) {
+      return 0;
+    }
+    return map(analogRead(pin), 409, 4095, 26, 255);
 }
 
 void displayLcdGeneric(int channel, String header, double number, String zeroValue) {
