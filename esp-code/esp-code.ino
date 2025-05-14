@@ -3,7 +3,7 @@
 #include <Arduino.h>;
 
 //SWITCHES PINS
-#define POWER_SWITCH_PIN 5
+#define POWER_SWITCH_PIN 18 //prev 5
 #define SPEAKER_POWER_SWITCH_PIN 4
 
 //POT PINS
@@ -179,7 +179,7 @@ void controlPanelController(void *pvParameters) {
       controlFan();
 
       if(!SPEAKER_ON) {
-      //  controlSpeaker();      
+        controlSpeaker();      
       }
 
     delay(100);
@@ -192,10 +192,10 @@ void setup() {
     scanI2CWithTCA();
 
     pinMode(POWER_SWITCH_PIN, INPUT_PULLUP);  // Use internal pull-up resistor
-    //pinMode(SPEAKER_POWER_SWITCH_PIN, INPUT_PULLUP);  // Use internal pull-up resistor
+    pinMode(SPEAKER_POWER_SWITCH_PIN, INPUT_PULLUP);  // Use internal pull-up resistor
 
     pinMode(POWER_LED_PIN, OUTPUT);
-    //pinMode(SPEAKER_POWER_LED_PIN, OUTPUT);
+    pinMode(SPEAKER_POWER_LED_PIN, OUTPUT);
 
     ledcAttach(FAN_PWM_PIN, PWM_FREQ, PWM_RESOLUTION); // Set up PWM 
     pinMode(FAN_TACHO_PIN, INPUT_PULLUP); // Set up tacho meters pins
@@ -232,9 +232,11 @@ void scanI2CWithTCA() {
   }
 }
 
-void toggleSwitchGeneric(int switchPin, bool &deviceState, int ledPin, const char *deviceName, void (*callback)() = nullptr) {
+void toggleSwitchGeneric(int switchPin, bool &deviceState, int ledPin, const char *deviceName, void (*callback)() = nullptr, bool reverseExpectedValue = false) {
 
-    if (digitalRead(switchPin) == LOW) {
+    bool expectedValue = reverseExpectedValue ? HIGH : LOW;
+    Serial.println(digitalRead(switchPin));
+    if (digitalRead(switchPin) == expectedValue) {
         deviceState = !deviceState; // Toggle state
         digitalWrite(ledPin, deviceState); // Set LED accordingly
         Serial.print(deviceName);
@@ -254,7 +256,7 @@ void switchesController(void *pvParameters) {
   while(1) {
     toggleSwitchGeneric(POWER_SWITCH_PIN, POWER_ON, POWER_LED_PIN, "Fan", powerDownReset);
     if(POWER_ON) {
-      //toggleSwitchGeneric(SPEAKER_POWER_SWITCH_PIN, SPEAKER_ON, SPEAKER_POWER_LED_PIN, "Speaker");
+      //toggleSwitchGeneric(SPEAKER_POWER_SWITCH_PIN, SPEAKER_ON, SPEAKER_POWER_LED_PIN, "Speaker", nullptr,  true);
     }
     
     delay(100);
