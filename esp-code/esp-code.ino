@@ -3,7 +3,7 @@
 #include <Arduino.h>;
 
 //SWITCHES PINS
-#define POWER_SWITCH_PIN 18 //prev 5
+#define POWER_SWITCH_PIN 5 //prev 5
 
 //POT PINS
 #define FAN_POT_PIN 34
@@ -144,7 +144,7 @@ void controlFan() {
     FAN_SPEED_PERCENTAGE = getPotentiometerValueInPercent(FAN_POT_PIN);
     FAN_SPEED = getPotentiometerValueIn8Bit(FAN_POT_PIN);
 
-    displayLcdGeneric(fan_lcd_channel, "Fan speed:", FAN_SPEED, "Fan is off");
+    displayLcdGeneric(fan_lcd_channel, "Fan speed:", FAN_SPEED_PERCENTAGE, "Fan is off");
     setFanSpeed();
     calculateFanRpm();
 }
@@ -206,7 +206,6 @@ void scanI2CWithTCA() {
 void toggleSwitchGeneric(int switchPin, bool &deviceState, int ledPin, const char *deviceName, void (*callback)() = nullptr, bool reverseExpectedValue = false) {
 
     bool expectedValue = reverseExpectedValue ? HIGH : LOW;
-    Serial.println(digitalRead(switchPin));
     if (digitalRead(switchPin) == expectedValue) {
         deviceState = !deviceState; // Toggle state
         digitalWrite(ledPin, deviceState); // Set LED accordingly
@@ -224,7 +223,7 @@ void toggleSwitchGeneric(int switchPin, bool &deviceState, int ledPin, const cha
 // Runs on core 1;
 void switchesController(void *pvParameters) {
   while(1) {
-    toggleSwitchGeneric(POWER_SWITCH_PIN, POWER_ON, POWER_LED_PIN, "Fan");
+    toggleSwitchGeneric(POWER_SWITCH_PIN, POWER_ON, POWER_LED_PIN, "Fan", nullptr, true);
     
     delay(100);
   }
