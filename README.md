@@ -47,7 +47,7 @@ Fan and switch handling tasks are pinned to separate ESP32 cores for parallel pr
 
 ### Installation Steps:
 
-1. Clone this repository: -```bash git clone https://github.com/biebthesecond/EPS-subsonic-jet-facility.git -```
+1. Clone this repository: -```bash git clone https://github.com/OsloMet-Green-energy-lab/EPS-subsonic-jet-facility.git```
 
 2. Open esp-code.ino in the Arduino IDE.
 
